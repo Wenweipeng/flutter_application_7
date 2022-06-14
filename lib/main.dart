@@ -15,7 +15,129 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: DialogRoute(),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('首页'),
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(8),
+        children: [
+          ListTile(
+            title: Text('WillPopScopeTestRoute'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WillPopScopeTestRoute(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('ProviderRoute'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProviderRoute(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('colorTest'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => colorTest(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('MaterialColorTest'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MaterialColorTest(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('ThemeTestRoute'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ThemeTestRoute(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('ValueListenableRoute'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ValueListenableRoute(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('FutureTest'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FutureTest(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('StreamTest'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const StreamTest(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('DialogRoute'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DialogRoute(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -86,7 +208,11 @@ class __TestWidgetState extends State<_TestWidget> {
   @override
   Widget build(BuildContext context) {
     //使用InheritedWidget中的共享数据
-    return Text(ShareDataWidget.of(context)!.data.toString());
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('_TestWidget'),
+        ),
+        body: Text(ShareDataWidget.of(context)!.data.toString()));
   }
 
   @override //下文会详细介绍。
@@ -109,26 +235,30 @@ class _InheritedWidgetTestRouteState extends State<InheritedWidgetTestRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ShareDataWidget(
-        //使用ShareDataWidget
-        data: count,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: _TestWidget(), //子widget中依赖ShareDataWidget
-            ),
-            ElevatedButton(
-              child: Text("Increment"),
-              //每点击一次，将count自增，然后重新build,ShareDataWidget的data将被更新
-              onPressed: () => setState(() => ++count),
-            )
-          ],
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('InheritedWidget'),
         ),
-      ),
-    );
+        body: Center(
+          child: ShareDataWidget(
+            //使用ShareDataWidget
+            data: count,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: _TestWidget(), //子widget中依赖ShareDataWidget
+                ),
+                ElevatedButton(
+                  child: Text("Increment"),
+                  //每点击一次，将count自增，然后重新build,ShareDataWidget的data将被更新
+                  onPressed: () => setState(() => ++count),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -266,32 +396,36 @@ class ProviderRoute extends StatefulWidget {
 class _ProviderRouteState extends State<ProviderRoute> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ChangeNotifierProvider<CartModel>(
-        data: CartModel(),
-        child: Builder(builder: (context) {
-          return Column(
-            children: <Widget>[
-              Builder(builder: (context) {
-                var cart = ChangeNotifierProvider.of<CartModel>(context);
-                return Text("总价: ${cart.totalPrice}");
-              }),
-              Builder(builder: (context) {
-                print("ElevatedButton build"); //在后面优化部分会用到
-                return ElevatedButton(
-                  child: Text("添加商品"),
-                  onPressed: () {
-                    //给购物车中添加商品，添加后总价会更新
-                    ChangeNotifierProvider.of<CartModel>(context)
-                        .add(Item(20.0, 1));
-                  },
-                );
-              }),
-            ],
-          );
-        }),
-      ),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("ProviderRoute"),
+        ),
+        body: Center(
+          child: ChangeNotifierProvider<CartModel>(
+            data: CartModel(),
+            child: Builder(builder: (context) {
+              return Column(
+                children: <Widget>[
+                  Builder(builder: (context) {
+                    var cart = ChangeNotifierProvider.of<CartModel>(context);
+                    return Text("总价: ${cart.totalPrice}");
+                  }),
+                  Builder(builder: (context) {
+                    print("ElevatedButton build"); //在后面优化部分会用到
+                    return ElevatedButton(
+                      child: Text("添加商品"),
+                      onPressed: () {
+                        //给购物车中添加商品，添加后总价会更新
+                        ChangeNotifierProvider.of<CartModel>(context)
+                            .add(Item(20.0, 1));
+                      },
+                    );
+                  }),
+                ],
+              );
+            }),
+          ),
+        ));
   }
 }
 
@@ -346,12 +480,16 @@ class colorTest extends StatefulWidget {
 class _colorTestState extends State<colorTest> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      //背景为蓝色，则title自动为白色
-      NavBar(color: Colors.blue, title: "标题"),
-      //背景为白色，则title自动为黑色
-      NavBar(color: Colors.white, title: "标题"),
-    ]);
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("colorTest"),
+        ),
+        body: Column(children: <Widget>[
+          //背景为蓝色，则title自动为白色
+          NavBar(color: Colors.blue, title: "标题"),
+          //背景为白色，则title自动为黑色
+          NavBar(color: Colors.white, title: "标题"),
+        ]));
   }
 }
 
@@ -382,80 +520,84 @@ class MaterialColorTest extends StatefulWidget {
 class _MaterialColorTestState extends State<MaterialColorTest> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        color: Colors.blue.shade50,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
-          ),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("MaterialColorTest"),
         ),
-      ),
-      Container(
-        color: Colors.blue.shade100,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+        body: Column(children: [
+          Container(
+            color: Colors.blue.shade50,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade200,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade100,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade300,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade200,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade400,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade300,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade500,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade400,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade600,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade500,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      Container(
-        color: Colors.blue.shade700,
-        child: Text(
-          "Hello World",
-          style: TextStyle(
-            color: Colors.white,
+          Container(
+            color: Colors.blue.shade600,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-    ]);
+          Container(
+            color: Colors.blue.shade700,
+            child: Text(
+              "Hello World",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ]));
   }
 }
 
@@ -470,44 +612,52 @@ class _ThemeTestRouteState extends State<ThemeTestRoute> {
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    return Theme(
-      data: ThemeData(
-          primarySwatch: _themeColor, //用于导航栏、FloatingActionButton的背景色等
-          iconTheme: IconThemeData(color: _themeColor) //用于Icon颜色
-          ),
-      child: Scaffold(
-        appBar: AppBar(title: Text("主题测试")),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            //第一行Icon使用主题中的iconTheme
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Icon(Icons.favorite),
-              Icon(Icons.airport_shuttle),
-              Text("  颜色跟随主题")
-            ]),
-            //为第二行Icon自定义颜色（固定为黑色)
-            Theme(
-              data: themeData.copyWith(
-                iconTheme: themeData.iconTheme.copyWith(color: Colors.black),
-              ),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.favorite),
-                    Icon(Icons.airport_shuttle),
-                    Text("  颜色固定黑色")
-                  ]),
-            ),
-          ],
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("主题测试"),
+          //设置主题色
         ),
-        floatingActionButton: FloatingActionButton(
-            onPressed: () => //切换主题
-                setState(() => _themeColor =
-                    _themeColor == Colors.teal ? Colors.blue : Colors.teal),
-            child: Icon(Icons.palette)),
-      ),
-    );
+        body: Theme(
+          data: ThemeData(
+              primarySwatch: _themeColor, //用于导航栏、FloatingActionButton的背景色等
+              iconTheme: IconThemeData(color: _themeColor) //用于Icon颜色
+              ),
+          child: Scaffold(
+            appBar: AppBar(title: Text("主题测试")),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                //第一行Icon使用主题中的iconTheme
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(Icons.favorite),
+                      Icon(Icons.airport_shuttle),
+                      Text("  颜色跟随主题")
+                    ]),
+                //为第二行Icon自定义颜色（固定为黑色)
+                Theme(
+                  data: themeData.copyWith(
+                    iconTheme:
+                        themeData.iconTheme.copyWith(color: Colors.black),
+                  ),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.favorite),
+                        Icon(Icons.airport_shuttle),
+                        Text("  颜色固定黑色")
+                      ]),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: () => //切换主题
+                    setState(() => _themeColor =
+                        _themeColor == Colors.teal ? Colors.blue : Colors.teal),
+                child: Icon(Icons.palette)),
+          ),
+        ));
   }
 }
 
@@ -569,25 +719,29 @@ class FutureTest extends StatefulWidget {
 class _FutureTestState extends State<FutureTest> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder<String>(
-          future: mockNetworkData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            // 请求已结束
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                // 请求失败，显示错误
-                return Text("Error: ${snapshot.error}");
-              } else {
-                // 请求成功，显示数据
-                return Text("Contents: ${snapshot.data}");
-              }
-            } else {
-              // 请求未结束，显示loading
-              return CircularProgressIndicator();
-            }
-          }),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Future测试"),
+        ),
+        body: Center(
+          child: FutureBuilder<String>(
+              future: mockNetworkData(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                // 请求已结束
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    // 请求失败，显示错误
+                    return Text("Error: ${snapshot.error}");
+                  } else {
+                    // 请求成功，显示数据
+                    return Text("Contents: ${snapshot.data}");
+                  }
+                } else {
+                  // 请求未结束，显示loading
+                  return CircularProgressIndicator();
+                }
+              }),
+        ));
   }
 }
 
@@ -607,23 +761,27 @@ class StreamTest extends StatefulWidget {
 class _StreamTestState extends State<StreamTest> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
-      stream: counter(), //
-      //initialData: ,// a Stream<int> or null
-      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-        if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Text('没有Stream');
-          case ConnectionState.waiting:
-            return Text('等待数据...');
-          case ConnectionState.active:
-            return Text('active: ${snapshot.data}');
-          case ConnectionState.done:
-            return Text('Stream 已关闭');
-        }
-      },
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Stream测试"),
+        ),
+        body: StreamBuilder<int>(
+          stream: counter(), //
+          //initialData: ,// a Stream<int> or null
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+                return Text('没有Stream');
+              case ConnectionState.waiting:
+                return Text('等待数据...');
+              case ConnectionState.active:
+                return Text('active: ${snapshot.data}');
+              case ConnectionState.done:
+                return Text('Stream 已关闭');
+            }
+          },
+        ));
   }
 }
 
@@ -639,44 +797,48 @@ class _DialogRouteState extends State<DialogRoute> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        ElevatedButton(
-          child: Text("对话框1"),
-          onPressed: () async {
-            //弹出对话框并等待其关闭
-            DateTime? delete = await _showDatePicker1();
-            if (delete == null) {
-              print("取消删除");
-            } else {
-              print("已确认删除");
-              //... 删除文件
-            }
-          },
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Dialog测试"),
         ),
-        ElevatedButton(
-          child: Text("显示底部菜单列表"),
-          onPressed: () async {
-            int? type = await _showModalBottomSheet();
-            print(type);
-          },
-        ),
-        ElevatedButton(
-          child: Text("显示"),
-          onPressed: () async {
-            await changeLanguage();
-            // print(type);
-          },
-        ),
-        ElevatedButton(
-          child: Text("显示3"),
-          onPressed: () async {
-            await showListDialog();
-            // print(type);
-          },
-        ),
-      ],
-    );
+        body: Column(
+          children: <Widget>[
+            ElevatedButton(
+              child: Text("对话框1"),
+              onPressed: () async {
+                //弹出对话框并等待其关闭
+                DateTime? delete = await _showDatePicker1();
+                if (delete == null) {
+                  print("取消删除");
+                } else {
+                  print("已确认删除");
+                  //... 删除文件
+                }
+              },
+            ),
+            ElevatedButton(
+              child: Text("显示底部菜单列表"),
+              onPressed: () async {
+                int? type = await _showModalBottomSheet();
+                print(type);
+              },
+            ),
+            ElevatedButton(
+              child: Text("显示"),
+              onPressed: () async {
+                await changeLanguage();
+                // print(type);
+              },
+            ),
+            ElevatedButton(
+              child: Text("显示3"),
+              onPressed: () async {
+                await showListDialog();
+                // print(type);
+              },
+            ),
+          ],
+        ));
   }
 
 // 弹出对话框
